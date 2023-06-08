@@ -40,7 +40,7 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
 
   Future<void> searchGifs(String query, {String? pos}) async {
     final url =
-        'https://g.tenor.com/v1/search?q=$query&key=LIVDSRZULELA&limit=8${pos != null ? '&pos=$pos' : ''}';
+        'https://g.tenor.com/v1/search?q=$query&key=$APIKey&limit=8${pos != null ? '&pos=$pos' : ''}';
 
     final response = await http.get(Uri.parse(url));
 
@@ -52,7 +52,7 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
         if (pos == null) {
           gifs = results;
         } else {
-          gifs.addAll(results);
+          gifs.insertAll(0, results); // Add new GIFs to the beginning of the list
         }
         nextPos = data['next'];
       });
@@ -124,6 +124,7 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
               ),
             ),
           ),
+          // Highlighted changes start
           _showSuggestions && suggestions.isNotEmpty
               ? Expanded(
                   child: ListView.builder(
@@ -144,6 +145,7 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
                   ),
                 )
               : SizedBox(),
+          // Highlighted changes end
           Expanded(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -167,8 +169,7 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
           nextPos != null
               ? ElevatedButton(
                   child: Text('Load More'),
-                  onPressed: () =>
-                      searchGifs(_searchController.text, pos: nextPos),
+                  onPressed: () => searchGifs(_searchController.text, pos: nextPos),
                 )
               : SizedBox(),
         ],
