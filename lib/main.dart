@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:share_plus/share_plus.dart';
 
 const String APIKey = 'LIVDSRZULELA';
 const String searchEndpoint = 'https://g.tenor.com/v1/search';
@@ -192,7 +193,7 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
                           child: IconButton(
                             icon: Icon(Icons.share),
                             onPressed: () {
-                              // Share functionality to be added
+                              Share.share(fullScreenUrl);
                             },
                           ),
                         ),
