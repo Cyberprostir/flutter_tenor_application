@@ -124,7 +124,6 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
               ),
             ),
           ),
-          // Highlighted changes start
           _showSuggestions && suggestions.isNotEmpty
               ? Expanded(
                   child: ListView.builder(
@@ -145,7 +144,6 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
                   ),
                 )
               : SizedBox(),
-          // Highlighted changes end
           Expanded(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -158,10 +156,34 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
                 final gif = gifs[index];
                 final url = gif['media'][0]['tinygif']['url'];
 
-                return CachedNetworkImage(
-                  imageUrl: url,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                return Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 4 / 3,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: CachedNetworkImage(
+                            imageUrl: url,
+                            placeholder: (context, url) => CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 30.0,
+                        width: double.infinity,
+                        child: IconButton(
+                          icon: Icon(Icons.share),
+                          onPressed: () {
+                            // Share functionality to be added
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -177,3 +199,4 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
     );
   }
 }
+
