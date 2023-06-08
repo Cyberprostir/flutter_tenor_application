@@ -33,6 +33,7 @@ class GifSearchHomePage extends StatefulWidget {
 class _GifSearchHomePageState extends State<GifSearchHomePage> {
   List<String> suggestions = [];
   List<dynamic> gifs = [];
+  bool _showSuggestions = true;
 
   TextEditingController _searchController = TextEditingController();
 
@@ -96,6 +97,9 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
                 }
               },
               onSubmitted: (value) {
+                setState(() {
+                  _showSuggestions = false;
+                });
                 searchGifs(value);
               },
               decoration: InputDecoration(
@@ -103,13 +107,16 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
                 suffixIcon: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {
+                    setState(() {
+                      _showSuggestions = false;
+                    });
                     searchGifs(_searchController.text);
                   },
                 ),
               ),
             ),
           ),
-          suggestions.isNotEmpty
+          _showSuggestions && suggestions.isNotEmpty
               ? Expanded(
                   child: ListView.builder(
                     itemCount: suggestions.length,
@@ -118,6 +125,9 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
                       return ListTile(
                         title: Text(suggestion),
                         onTap: () {
+                          setState(() {
+                            _showSuggestions = false;
+                          });
                           _searchController.text = suggestion;
                           searchGifs(suggestion);
                         },
