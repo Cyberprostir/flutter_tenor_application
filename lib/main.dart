@@ -52,7 +52,8 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
         if (pos == null) {
           gifs = results;
         } else {
-          gifs.insertAll(0, results); // Add new GIFs to the beginning of the list
+          gifs.insertAll(
+              0, results); // Add new GIFs to the beginning of the list
         }
         nextPos = data['next'];
       });
@@ -154,14 +155,16 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
               itemCount: gifs.length,
               itemBuilder: (context, index) {
                 final gif = gifs[index];
-                final url = gif['media'][0]['tinygif']['url'];
+                final previewUrl = gif['media'][0]['tinygif']['url'];
+                final fullScreenUrl = gif['media'][0]['gif']['url'];
 
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => FullSizeImagePage(imageUrl: url),
+                        builder: (context) =>
+                            FullSizeImagePage(imageUrl: fullScreenUrl),
                       ),
                     );
                   },
@@ -174,7 +177,7 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
                             child: CachedNetworkImage(
-                              imageUrl: url,
+                              imageUrl: previewUrl,
                               placeholder: (context, url) =>
                                   CircularProgressIndicator(),
                               errorWidget: (context, url, error) =>
@@ -235,4 +238,3 @@ class FullSizeImagePage extends StatelessWidget {
     );
   }
 }
-
