@@ -156,33 +156,45 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
                 final gif = gifs[index];
                 final url = gif['media'][0]['tinygif']['url'];
 
-                return Container(
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      AspectRatio(
-                        aspectRatio: 4 / 3,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: CachedNetworkImage(
-                            imageUrl: url,
-                            placeholder: (context, url) => CircularProgressIndicator(),
-                            errorWidget: (context, url, error) => Icon(Icons.error),
-                            fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FullSizeImagePage(imageUrl: url),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 4 / 3,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: CachedNetworkImage(
+                              imageUrl: url,
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        height: 30.0,
-                        width: double.infinity,
-                        child: IconButton(
-                          icon: Icon(Icons.share),
-                          onPressed: () {
-                            // Share functionality to be added
-                          },
+                        Container(
+                          height: 30.0,
+                          width: double.infinity,
+                          child: IconButton(
+                            icon: Icon(Icons.share),
+                            onPressed: () {
+                              // Share functionality to be added
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
@@ -191,10 +203,34 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
           nextPos != null
               ? ElevatedButton(
                   child: Text('Load More'),
-                  onPressed: () => searchGifs(_searchController.text, pos: nextPos),
+                  onPressed: () =>
+                      searchGifs(_searchController.text, pos: nextPos),
                 )
               : SizedBox(),
         ],
+      ),
+    );
+  }
+}
+
+class FullSizeImagePage extends StatelessWidget {
+  final String imageUrl;
+
+  const FullSizeImagePage({required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Full Size Image'),
+      ),
+      body: Center(
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
