@@ -33,20 +33,28 @@ class GifSearchHomePage extends StatefulWidget {
 class _GifSearchHomePageState extends State<GifSearchHomePage> {
   List<String> suggestions = [];
   List<dynamic> gifs = [];
+  String? nextPos;
   bool _showSuggestions = true;
 
   TextEditingController _searchController = TextEditingController();
 
-  void searchGifs(String query) async {
+  Future<void> searchGifs(String query, {String? pos}) async {
     final url =
-        '$searchEndpoint?q=$query&key=$APIKey&limit=8'; // Modify parameters as needed
+        'https://g.tenor.com/v1/search?q=$query&key=LIVDSRZULELA&limit=8${pos != null ? '&pos=$pos' : ''}';
 
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = json.decode(response.body);
+      final results = data['results'];
+
       setState(() {
-        gifs = data['results'];
+        if (pos == null) {
+          gifs = results;
+        } else {
+          gifs.addAll(results);
+        }
+        nextPos = data['next'];
       });
     } else {
       print('Error searching GIFs: ${response.statusCode}');
@@ -156,6 +164,13 @@ class _GifSearchHomePageState extends State<GifSearchHomePage> {
               },
             ),
           ),
+          nextPos != null
+              ? ElevatedButton(
+                  child: Text('Load More'),
+                  onPressed: () =>
+                      searchGifs(_searchController.text, pos: nextPos),
+                )
+              : SizedBox(),
         ],
       ),
     );
